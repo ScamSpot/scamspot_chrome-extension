@@ -1,22 +1,100 @@
-const article = document.querySelector("article");
+console.log("Hello from your Chrome extension!")
 
-// `document.querySelector` may return null if the selector doesn't match anything.
-if (article) {
-  const text = article.textContent;
-  const wordMatchRegExp = /[^\s]+/g; // Regular expression
-  const words = text.matchAll(wordMatchRegExp);
-  // matchAll returns an iterator, convert to array to get word count
-  const wordCount = [...words].length;
-  const readingTime = Math.round(wordCount / 200);
-  const badge = document.createElement("p");
-  // Use the same styling as the publish information in an article's header
-  badge.classList.add("color-secondary-text", "type--caption");
-  badge.textContent = `⏱️ ${readingTime} min read!`;
+// Select the body element
+const body = document.querySelector('body');
 
-  // Support for API reference docs
-  const heading = article.querySelector("h1");
-  // Support for article docs with date
-  const date = article.querySelector("time")?.parentNode;
+// Observe the body element for changes to its children
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (String(mutation.target.innerHTML).includes('_a9ym')) {
+        // console.log(mutation);
+        // console.log(String(mutation.previousSibling.className ));
 
-  (date ?? heading).insertAdjacentElement("afterend", badge);
-}
+        // Main Comment Load
+        if (mutation.previousSibling.className === '_ae5m _ae5n _ae5o' && mutation.addedNodes.length > 0) { 
+            // console.log(mutation.addedNodes[0]);
+
+            mutation.addedNodes[0].querySelectorAll('._a9ym').forEach((comment) => {
+                extractComment(comment);
+            });
+        }
+
+        // Single Comment Load
+        if (mutation.previousSibling.className === '_a9ym') {
+            extractComment(mutation.addedNodes[0]);
+        }
+
+    }
+  });
+});
+
+observer.observe(body, {
+  childList: true,
+  subtree: true,
+});
+
+
+function extractComment(comment) {
+    //console.log(comment);
+    var text = comment.innerText || comment.textContent;
+    const result = text.split('\n');
+
+    //console.log("@", result[0], result[1]);
+    let username = result[0];
+    let commentText = result[1];
+    let hash = createHash(result[0] + result[1]);
+    let data = { "username": username, "comment": commentText, "hash": hash };
+    // send data to API
+
+    //make get request to API: https://api.chucknorris.io/jokes/random
+    fetch('https://www.randomnumberapi.com/api/v1.0/random?min=1&max=12&count=1') // Call the fetch function passing the url of the API as a parameter
+    .then((resp) => resp.json()) // Transform the data into json
+    .then(function(data) {
+        //console.log(data);
+        var identifier = data[0];
+        var rating = Math.floor(Math.random() * (100 - 10) + 1);
+        //console.log(identifier);
+        
+        // find span with id = rating
+        const replace = document.querySelector('span#cr-' + identifier);
+        if (replace !== null) {
+          replace.textContent = "Rating: " + rating;
+          replace.className = 'comment-rating fetched';
+        }
+
+    });
+
+    console.log("@" + result[0] + ": " + result[1]);
+
+    const replyButton = comment.querySelector('._aacl._aacn._aacu._aacy._aad6  ._ab8y._ab94._ab99._ab9f._ab9m._ab9p._abbi._abcm');
+
+    const newParagraph = document.createElement('span');
+    newParagraph.id = "cr-" + hash;
+    newParagraph.className = 'comment-rating loading';
+
+    newParagraph.textContent = 'Loading... (' + hash + ')';
+
+    replyButton.parentNode.insertBefore(newParagraph, replyButton.nextSibling);
+
+    // return "example"
+  }
+  
+  function createHash(str) {
+    let hash = 0;
+    if (str.length == 0) {
+      return hash;
+    }
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+      hash = Math.abs(hash)
+    }
+
+    //return hash;
+
+    return Math.floor(Math.random() * (12 - 1) + 1);
+  }
+  
+  
+

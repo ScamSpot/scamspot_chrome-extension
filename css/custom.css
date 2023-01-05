@@ -1,0 +1,10 @@
+.comment-rating {
+    margin-right: 15px;
+}
+.comment-rating.loading {
+    color: red;
+}
+
+.comment-rating.fetched {
+    color: green;
+}
