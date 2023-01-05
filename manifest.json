@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Instagram Spam Comment Watchdog",
+  "name": "Instagram Spam Scanner",
   "version": "1.0",
   "description": "Helps you to detect spam comments on Instagram. Shows a rating how likely the comment is a spam.",
   "icons": {

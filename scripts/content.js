@@ -52,7 +52,7 @@ function extractComment(comment) {
     .then(function(data) {
         //console.log(data);
         var identifier = data[0];
-        var rating = Math.floor(Math.random() * (100 - 10) + 1);
+        var rating = Math.floor(Math.random() * (100 - 10) + 10);
         //console.log(identifier);
         
         // find span with id = rating
