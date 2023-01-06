@@ -1,5 +1,7 @@
 console.log("Hello from your Chrome extension!")
 
+
+
 // Select the body element
 const body = document.querySelector('body');
 
@@ -44,27 +46,42 @@ function extractComment(comment) {
     let commentText = result[1];
     let hash = createHash(result[0] + result[1]);
     let data = { "username": username, "comment": commentText, "hash": hash };
-    // send data to API
+    
+    const request = new XMLHttpRequest();
+    request.open('POST', 'https://igscamchecker.pythonanywhere.com/scam/', true);
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.onload = function () {
+      if (this.status >= 200 && this.status < 400) {
+        const content = JSON.parse(this.response);
 
-    //make get request to API: https://api.chucknorris.io/jokes/random
-    fetch('https://www.randomnumberapi.com/api/v1.0/random?min=1&max=12&count=1') // Call the fetch function passing the url of the API as a parameter
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) {
-        //console.log(data);
-        var identifier = data[0];
-        var rating = Math.floor(Math.random() * (100 - 10) + 10);
+        var identifier = content.comment_id;
+        var rating = content.score;
         //console.log(identifier);
         
         // find span with id = rating
         const replace = document.querySelector('span#cr-' + identifier);
         if (replace !== null) {
           replace.textContent = "Rating: " + rating;
-          replace.className = 'comment-rating fetched';
+
+          if (rating < 50) {
+            replace.className = 'comment-rating fetched scam';
+          } else {
+            replace.className = 'comment-rating fetched legit';
+          }
         }
 
-    });
 
-    console.log("@" + result[0] + ": " + result[1]);
+      } else {
+        console.error(`Error: ${this.status}`);
+      }
+    };
+    request.onerror = function () {
+      console.error('Error: Network Error');
+    };
+    request.send(JSON.stringify({comment_id: hash, comment_text: commentText}));
+
+
+    //console.log("@" + result[0] + ": " + result[1]);
 
     const replyButton = comment.querySelector('._aacl._aacn._aacu._aacy._aad6  ._ab8y._ab94._ab99._ab9f._ab9m._ab9p._abbi._abcm');
 
@@ -72,11 +89,10 @@ function extractComment(comment) {
     newParagraph.id = "cr-" + hash;
     newParagraph.className = 'comment-rating loading';
 
-    newParagraph.textContent = 'Loading... (' + hash + ')';
+    newParagraph.textContent = 'Loading...'; // (' + hash + ')';
 
     replyButton.parentNode.insertBefore(newParagraph, replyButton.nextSibling);
 
-    // return "example"
   }
   
   function createHash(str) {
@@ -91,9 +107,12 @@ function extractComment(comment) {
       hash = Math.abs(hash)
     }
 
-    //return hash;
+    hash = hash + Math.floor(Math.random() * (100000 - 1) + 1);
 
-    return Math.floor(Math.random() * (12 - 1) + 1);
+    //return Math.floor(Math.random() * (12 - 1) + 1);
+
+    return hash;
+
   }
   
   

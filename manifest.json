@@ -10,17 +10,27 @@
     "128": "images/icon-128.png"
   },
   "host_permissions": [
-    "https://api.chucknorris.io/*"
+    "https://api.chucknorris.io/*",
+    "http://localhost:5000/*",
+    "https://igscamchecker.pythonanywhere.com/*"
   ],
   "content_scripts": [
     {
       "js": ["scripts/content.js"],
       "css": ["css/custom.css"],
       "matches": [
-        "https://www.instagram.com/p/*"
-      ]
+        "https://www.instagram.com/p/*",
+        "http://localhost/*",
+        "https://igscamchecker.pythonanywhere.com/*"
+      ],
+      "all_frames": true
+
     }
-  ]
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src http://localhost;  object-src http://localhost;"
+  }
+  
 
 
 }

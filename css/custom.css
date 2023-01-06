@@ -2,9 +2,13 @@
     margin-right: 15px;
 }
 .comment-rating.loading {
-    color: red;
+    color: grey;
 }
 
-.comment-rating.fetched {
+.comment-rating.legit {
     color: green;
+}
+
+.comment-rating.scam {
+    color: red;
 }
