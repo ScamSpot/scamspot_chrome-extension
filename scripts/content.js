@@ -36,7 +36,7 @@ observer.observe(body, {
 });
 
 
-function extractComment(comment) {
+async function extractComment(comment) {
     //console.log(comment);
     var text = comment.innerText || comment.textContent;
     const result = text.split('\n');
@@ -47,8 +47,9 @@ function extractComment(comment) {
     let hash = createHash(result[0] + result[1]);
     let data = { "username": username, "comment": commentText, "hash": hash };
     
+    // make request to pythonanywhere with data
     const request = new XMLHttpRequest();
-    request.open('POST', 'https://igscamchecker.pythonanywhere.com/scam/', true);
+    request.open('POST', 'http://127.0.0.1:5000/scam/', true);
     request.setRequestHeader('Content-Type', 'application/json');
     request.onload = function () {
       if (this.status >= 200 && this.status < 400) {
@@ -56,14 +57,15 @@ function extractComment(comment) {
 
         var identifier = content.comment_id;
         var rating = content.score;
-        //console.log(identifier);
+        
+        console.log(identifier + ": " + rating);
         
         // find span with id = rating
         const replace = document.querySelector('span#cr-' + identifier);
         if (replace !== null) {
           replace.textContent = "Rating: " + rating;
 
-          if (rating < 50) {
+          if (rating > 50) {
             replace.className = 'comment-rating fetched scam';
           } else {
             replace.className = 'comment-rating fetched legit';
@@ -72,7 +74,7 @@ function extractComment(comment) {
 
 
       } else {
-        console.error(`Error: ${this.status}`);
+        console.error('Error: ' + this.status);
       }
     };
     request.onerror = function () {
@@ -81,9 +83,7 @@ function extractComment(comment) {
     request.send(JSON.stringify({comment_id: hash, comment_text: commentText}));
 
 
-    //console.log("@" + result[0] + ": " + result[1]);
-
-    const replyButton = comment.querySelector('._aacl._aacn._aacu._aacy._aad6  ._ab8y._ab94._ab99._ab9f._ab9m._ab9p._abbi._abcm');
+    const replyButton = comment.querySelector('._aacl._aacn._aacu._aacy._aad6 ._a9zg._a6hd'); //._ab8y._ab94._ab99._ab9f._ab9m._ab9p._abbi._abcm
 
     const newParagraph = document.createElement('span');
     newParagraph.id = "cr-" + hash;
