@@ -19,7 +19,7 @@
       "js": ["scripts/content.js"],
       "css": ["css/custom.css"],
       "matches": [
-        "https://www.instagram.com/p/*",
+        "https://www.instagram.com/*",
         "http://localhost/*",
         "https://igscamchecker.pythonanywhere.com/*"
       ],

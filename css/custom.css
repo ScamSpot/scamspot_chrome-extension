@@ -1,14 +1,33 @@
 .comment-rating {
-    margin-right: 15px;
+    margin-right: 10px;
+    color: white;
+    padding: 4px;
+    border-radius: 10px;
 }
 .comment-rating.loading {
     color: grey;
 }
 
+
 .comment-rating.legit {
-    color: green;
+    background-color: #68cb68;
+}
+
+
+ul.comment-unknown {
+    background-color: #fbffb6;
+}
+
+.comment-rating.unknown {
+    background-color: yellow;
+    color: black;
+}
+
+
+ul.comment-scam {
+    background-color: #ffc0c0;
 }
 
 .comment-rating.scam {
-    color: red;
+    background-color: red;
 }

@@ -1,29 +1,28 @@
 console.log("Hello from your Chrome extension!")
 
 
-
 // Select the body element
 const body = document.querySelector('body');
 
 // Observe the body element for changes to its children
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
+    //console.log(mutation);
+    //console.log("***********************************");
     if (String(mutation.target.innerHTML).includes('_a9ym')) {
-        // console.log(mutation);
-        // console.log(String(mutation.previousSibling.className ));
+        //console.log(mutation);
 
         // Main Comment Load
-        if (mutation.previousSibling.className === '_ae5m _ae5n _ae5o' && mutation.addedNodes.length > 0) { 
-            // console.log(mutation.addedNodes[0]);
-
-            mutation.addedNodes[0].querySelectorAll('._a9ym').forEach((comment) => {
-                extractComment(comment);
-            });
+        //if (mutation.previousSibling.className === '_ae5m _ae5n _ae5o' && mutation.addedNodes.length > 0) { 
+        if (mutation.addedNodes.length > 0) { 
+          mutation.addedNodes[0].querySelectorAll('._a9ym').forEach((comment) => {
+            console.log("Main Comment Load");
+            extractComment(comment);
+          });
         }
-
-        // Single Comment Load
-        if (mutation.previousSibling.className === '_a9ym') {
-            extractComment(mutation.addedNodes[0]);
+        
+        if (mutation.addedNodes[0] !== undefined && mutation.addedNodes[0].className === '_a9ym') {
+          extractComment(mutation.addedNodes[0]);
         }
 
     }
@@ -37,14 +36,15 @@ observer.observe(body, {
 
 
 async function extractComment(comment) {
-    //console.log(comment);
-    var text = comment.innerText || comment.textContent;
-    const result = text.split('\n');
+  // console.log(comment);
+  var text = comment.innerText || comment.textContent;
 
-    //console.log("@", result[0], result[1]);
+  if(text !== "Load more comments") {
+    const result = text.split('\n');
     let username = result[0];
     let commentText = result[1];
     let hash = createHash(result[0] + result[1]);
+
     let data = { "username": username, "comment": commentText, "hash": hash };
     
     // make request to pythonanywhere with data
@@ -57,19 +57,25 @@ async function extractComment(comment) {
 
         var identifier = content.comment_id;
         var rating = content.score;
+        category = categorizeRating(rating);
         
-        console.log(identifier + ": " + rating);
+        //console.log(identifier + ": " + rating);
+        
+        // find report button
+        const reportLink = document.querySelector('a#report-' + identifier);
+        if (reportLink !== null) {
+          reportLink.href = reportLink.href + "&rating=" + category;
+          reportError.style.display = '';
+        }
         
         // find span with id = rating
         const replace = document.querySelector('span#cr-' + identifier);
+        const comment_container = replace.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
         if (replace !== null) {
-          replace.textContent = "Rating: " + rating;
+          replace.textContent = category.toUpperCase(); // + ' (' + rating + ')';
 
-          if (rating > 50) {
-            replace.className = 'comment-rating fetched scam';
-          } else {
-            replace.className = 'comment-rating fetched legit';
-          }
+          replace.className = 'comment-rating fetched ' + category + ' rating-' + rating;
+          comment_container.className = 'comment-' + category + ' comment-container rating-' + rating;
         }
 
 
@@ -82,38 +88,67 @@ async function extractComment(comment) {
     };
     request.send(JSON.stringify({comment_id: hash, comment_text: commentText}));
 
+    // console.log(comment)
 
-    const replyButton = comment.querySelector('._aacl._aacn._aacu._aacy._aad6 ._a9zg._a6hd'); //._ab8y._ab94._ab99._ab9f._ab9m._ab9p._abbi._abcm
+    // see image in docs & http://stevewellens.xtreemhost.com/jQuerySelectorTester.htm?i=1
+    // HTML = console.log(comment)
+    // Search Pattern = adapted JS Selector (remove the classes at the beginning)
+    
+    const buttons = comment.querySelectorAll('.x1plvlek.xryxfnj.x1c4vz4f.x2lah0s.xdt5ytf.xqjyukv.x1qjc9v5.x1oa3qoh.x1nhvcw1 > span > button')
+    const replyButton = buttons[buttons.length - 1]
+    //console.log(replyButton);
 
-    const newParagraph = document.createElement('span');
-    newParagraph.id = "cr-" + hash;
-    newParagraph.className = 'comment-rating loading';
+    const ratingIdentifier = document.createElement('span');
+    ratingIdentifier.id = "cr-" + hash;
+    ratingIdentifier.className = 'comment-rating loading';
+    ratingIdentifier.textContent = 'Loading...'; // (' + hash + ')';
 
-    newParagraph.textContent = 'Loading...'; // (' + hash + ')';
+    const reportError = document.createElement('a');
+    reportError.href = "https://hook.eu1.make.com/i2uffenbekw7dedrudi8rn364z95cp5v?comment=" + encodeURIComponent(commentText) + "&username=" + username;
+    reportError.target = "_blank";
+    reportError.id = "report-" + hash;
+    reportError.className = 'report-Button';
+    reportError.textContent = 'Report error';
+    reportError.style.display = 'none';
 
-    replyButton.parentNode.insertBefore(newParagraph, replyButton.nextSibling);
-
+    replyButton.parentNode.insertBefore(reportError, replyButton.nextSibling);
+    replyButton.parentNode.insertBefore(ratingIdentifier, replyButton.nextSibling);
   }
+
+    
+
+}
+
+
+function categorizeRating(rating) {
+  if (rating > 20) {
+    return 'scam';
+  } else if (rating >= 1 && rating <= 20) {
+    return 'unknown';
+  } else {
+    return 'legit';
+  }
+}
   
-  function createHash(str) {
-    let hash = 0;
-    if (str.length == 0) {
-      return hash;
-    }
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
-      hash = Math.abs(hash)
-    }
-
-    hash = hash + Math.floor(Math.random() * (100000 - 1) + 1);
-
-    //return Math.floor(Math.random() * (12 - 1) + 1);
-
+function createHash(str) {
+  let hash = 0;
+  if (str.length == 0) {
     return hash;
-
   }
-  
-  
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+    hash = Math.abs(hash)
+  }
+
+  hash = hash + Math.floor(Math.random() * (100000 - 1) + 1);
+
+  //return Math.floor(Math.random() * (12 - 1) + 1);
+
+  return hash;
+
+}
+
+
 
