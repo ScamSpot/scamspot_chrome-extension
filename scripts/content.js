@@ -49,40 +49,50 @@ async function extractComment(comment) {
     
     // make request to pythonanywhere with data
     const request = new XMLHttpRequest();
-    request.open('POST', 'http://127.0.0.1:5000/scam/', true);
+    //request.open('POST', 'http://127.0.0.1:5000/scam/', true);
+    request.open('POST', 'https://ig-scam-checker-obfcb.ondigitalocean.app/scam/', true);
     request.setRequestHeader('Content-Type', 'application/json');
-    request.onload = function () {
-      if (this.status >= 200 && this.status < 400) {
-        const content = JSON.parse(this.response);
-
-        var identifier = content.comment_id;
-        var rating = content.score;
-        category = categorizeRating(rating);
-        
-        //console.log(identifier + ": " + rating);
-        
-        // find report button
-        const reportLink = document.querySelector('a#report-' + identifier);
-        if (reportLink !== null) {
-          reportLink.href = reportLink.href + "&rating=" + category;
-          reportError.style.display = '';
+    
+    try {
+      request.onload = function () {
+        if (this.status >= 200 && this.status < 400) {
+          const content = JSON.parse(this.response);
+  
+          var identifier = content.comment_id;
+          var classifier = content.class;
+          // var rating = content.score;
+          category = categorizeRating(classifier);
+          
+          //console.log(identifier + ": " + rating);
+          
+          // find report button
+          const reportLink = document.querySelector('a#report-' + identifier);
+          if (reportLink !== null) {
+            reportLink.href = reportLink.href + "&rating=" + category;
+            reportError.style.display = '';
+          }
+          
+          // find span with id = rating
+          const replace = document.querySelector('span#cr-' + identifier);
+          const comment_container = replace.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+          if (replace !== null) {
+            replace.textContent = category.toUpperCase(); // + ' (' + category + ')';
+  
+            replace.className = 'comment-rating fetched ' + category + ' rating-' + category;
+            comment_container.className = 'comment-' + category + ' comment-container rating-' + category;
+          }
+  
+  
+        } else {
+          console.error('Error: ' + this.status);
         }
-        
-        // find span with id = rating
-        const replace = document.querySelector('span#cr-' + identifier);
-        const comment_container = replace.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
-        if (replace !== null) {
-          replace.textContent = category.toUpperCase(); // + ' (' + rating + ')';
-
-          replace.className = 'comment-rating fetched ' + category + ' rating-' + rating;
-          comment_container.className = 'comment-' + category + ' comment-container rating-' + rating;
-        }
-
-
-      } else {
-        console.error('Error: ' + this.status);
-      }
-    };
+      };
+    } finally {
+        // always runs
+    }
+  
+    
+    
     request.onerror = function () {
       console.error('Error: Network Error');
     };
@@ -120,13 +130,11 @@ async function extractComment(comment) {
 }
 
 
-function categorizeRating(rating) {
-  if (rating > 20) {
+function categorizeRating(classifier) {
+  if (classifier === 'spam') {
     return 'scam';
-  } else if (rating >= 1 && rating <= 20) {
-    return 'unknown';
   } else {
-    return 'legit';
+    return 'legit'; // ham
   }
 }
   
