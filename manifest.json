@@ -10,7 +10,6 @@
     "128": "images/icon-128.png"
   },
   "host_permissions": [
-    "https://api.chucknorris.io/*",
     "http://localhost:5000/*",
     "https://ig-scam-checker-obfcb.ondigitalocean.app/scam/",
     "https://igscamchecker.pythonanywhere.com/*"

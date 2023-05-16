@@ -1,5 +1,6 @@
-console.log("Hello from your Chrome extension!")
+console.log("Instagram Spam Checker active!")
 
+const mode = 1; // 0 = label comments, 1 = hide comments
 
 // Select the body element
 const body = document.querySelector('body');
@@ -8,7 +9,6 @@ const body = document.querySelector('body');
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     //console.log(mutation);
-    //console.log("***********************************");
     if (String(mutation.target.innerHTML).includes('_a9ym')) {
         //console.log(mutation);
 
@@ -16,7 +16,7 @@ const observer = new MutationObserver((mutations) => {
         //if (mutation.previousSibling.className === '_ae5m _ae5n _ae5o' && mutation.addedNodes.length > 0) { 
         if (mutation.addedNodes.length > 0) { 
           mutation.addedNodes[0].querySelectorAll('._a9ym').forEach((comment) => {
-            console.log("Main Comment Load");
+            //console.log("Main Comment Load");
             extractComment(comment);
           });
         }
@@ -38,11 +38,15 @@ observer.observe(body, {
 async function extractComment(comment) {
   // console.log(comment);
   var text = comment.innerText || comment.textContent;
+  //console.log(text);
 
   if(text !== "Load more comments") {
-    const result = text.split('\n');
+    //const result = text.split('\n');
+    const result = text.split('\n').filter(line => !line.includes('View replies'));
+
     let username = result[0];
-    let commentText = result[1];
+    let commentText = result.slice(1, -1).join(' ');
+
     let hash = createHash(result[0] + result[1]);
 
     let data = { "username": username, "comment": commentText, "hash": hash };
@@ -75,10 +79,16 @@ async function extractComment(comment) {
           // find span with id = rating
           const replace = document.querySelector('span#cr-' + identifier);
           const comment_container = replace.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+          comment_container.style.filter = '';
           if (replace !== null) {
             replace.textContent = category.toUpperCase(); // + ' (' + category + ')';
   
             replace.className = 'comment-rating fetched ' + category + ' rating-' + category;
+            if (mode === 1 && category === 'scam') {
+              comment_container.style.display = 'none';
+            } else if (mode === 1 && category === 'legit') {
+              replace.style.display = 'none';
+            }
             comment_container.className = 'comment-' + category + ' comment-container rating-' + category;
           }
   
@@ -91,8 +101,6 @@ async function extractComment(comment) {
         // always runs
     }
   
-    
-    
     request.onerror = function () {
       console.error('Error: Network Error');
     };
@@ -112,6 +120,11 @@ async function extractComment(comment) {
     ratingIdentifier.id = "cr-" + hash;
     ratingIdentifier.className = 'comment-rating loading';
     ratingIdentifier.textContent = 'Loading...'; // (' + hash + ')';
+    
+    if (mode === 1) {
+      const comment_container = replyButton.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+      comment_container.style.filter = 'blur(2px)';
+    }
 
     const reportError = document.createElement('a');
     reportError.href = "https://hook.eu1.make.com/i2uffenbekw7dedrudi8rn364z95cp5v?comment=" + encodeURIComponent(commentText) + "&username=" + username;
@@ -124,9 +137,6 @@ async function extractComment(comment) {
     replyButton.parentNode.insertBefore(reportError, replyButton.nextSibling);
     replyButton.parentNode.insertBefore(ratingIdentifier, replyButton.nextSibling);
   }
-
-    
-
 }
 
 
@@ -151,9 +161,6 @@ function createHash(str) {
   }
 
   hash = hash + Math.floor(Math.random() * (100000 - 1) + 1);
-
-  //return Math.floor(Math.random() * (12 - 1) + 1);
-
   return hash;
 
 }
