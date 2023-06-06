@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Instagram Spam Detector",
-  "version": "1.0",
-  "description": "Helps to detect spam and scam comments on Instagram.",
+  "name": "SpamSpot",
+  "version": "1.1",
+  "description": "Spots spam and scam comments on Instagram.",
   "icons": {
     "16": "images/icon-16.png",
     "32": "images/icon-32.png",
@@ -11,8 +11,7 @@
   },
   "host_permissions": [
     "http://localhost:5000/*",
-    "https://ig-scam-checker-obfcb.ondigitalocean.app/scam/",
-    "https://igscamchecker.pythonanywhere.com/*"
+    "https://ig-scam-checker-obfcb.ondigitalocean.app/scam/"
   ],
   "content_scripts": [
     {
@@ -21,8 +20,7 @@
       "matches": [
         "https://www.instagram.com/*",
         "http://localhost/*",
-        "https://ig-scam-checker-obfcb.ondigitalocean.app/scam/",
-        "https://igscamchecker.pythonanywhere.com/*"
+        "https://ig-scam-checker-obfcb.ondigitalocean.app/scam/"
       ],
       "all_frames": true
 

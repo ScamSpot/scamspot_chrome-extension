@@ -51,12 +51,12 @@ async function extractComment(comment) {
 
     let data = { "username": username, "comment": commentText, "hash": hash };
     
-    // make request to pythonanywhere with data
-    const request = new XMLHttpRequest();
     //request.open('POST', 'http://127.0.0.1:5000/scam/', true);
+
+    // make request with data
+    const request = new XMLHttpRequest();
     request.open('POST', 'https://ig-scam-checker-obfcb.ondigitalocean.app/scam/', true);
     request.setRequestHeader('Content-Type', 'application/json');
-    
     try {
       request.onload = function () {
         if (this.status >= 200 && this.status < 400) {
@@ -164,6 +164,3 @@ function createHash(str) {
   return hash;
 
 }
-
-
-
