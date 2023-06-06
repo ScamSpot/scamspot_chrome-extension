@@ -2,15 +2,16 @@
 
 SpamSpot is a powerful tool designed to enhance your online safety and protect you from spam and scam comments on Instagram, particularly in the finance-related English content.
 
-## Features
-
-- Visual identification: The extension visually highlights spam and scam comments, making them easily distinguishable from genuine comments.
-- Two modes: You have the option to choose between two modes: marking spam and scam content or hiding it completely. Change the settings in the 'content.js file
 
 ## Related repositories
 - https://github.com/stefanerben/ig_scraper
 - https://github.com/stefanerben/ig_spam_ml_models
 - https://github.com/stefanerben/ig_spam_api
+
+
+## Features
+- Visual identification: The extension visually highlights spam and scam comments, making them easily distinguishable from genuine comments.
+- Two modes: You have the option to choose between two modes: marking spam and scam content or hiding it completely. Change the settings in the 'content.js file
 
 ## Installation
 
@@ -49,6 +50,8 @@ We welcome contributions to the Instagram Scam Scanner Chrome Extension! If you 
 The Instagram Scam Scanner Chrome Extension is released under the MIT License. Feel free to use, modify, and distribute this extension in accordance with the terms of the license.
 
 ## Contact
-
 If you have any questions, feedback, or inquiries, please contact me at stefan@erben.eu.
 
+
+# Note
+README.md was written automatically generated
