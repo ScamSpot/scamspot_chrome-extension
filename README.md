@@ -54,4 +54,4 @@ If you have any questions, feedback, or inquiries, please contact me at stefan@e
 
 
 # Note
-README.md was written automatically generated
+README.md was generated automatically
