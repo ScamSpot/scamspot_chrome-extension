@@ -29,7 +29,7 @@ To install the Instagram Scam Scanner Chrome Extension, please follow these step
 3. Click the "Load unpacked" button.
 4. Select the extracted folder from Step 1.
    **Note:** Make sure to select the extracted folder, not the ZIP file.
-5. The Instagram Scam Scanner extension will be installed. Ignore any error messages if displayed.
+5. The Instagram Scam Scanner extension will be installed.
 
 ### Step 3: Log in to Instagram
 
@@ -39,11 +39,12 @@ To install the Instagram Scam Scanner Chrome Extension, please follow these step
 ### Step 4: Using the Chrome extension
 
 - As you browse through comments on Instagram posts, the extension will visually mark spam and scam comments or hide them completely based on the mode you have chosen.
-- You can switch between modes by accessing the extension's settings.
+- You can switch between two modes by accessing the extension's settings in the file 'scripts/content.js'.
+- You can visit a post such as this one to test results: https://www.instagram.com/p/CsLCoRIvTNO/
 
 ## Contributing
 
-We welcome contributions to the Instagram Scam Scanner Chrome Extension! If you encounter any issues, have suggestions for improvements, or would like to contribute to the development, feel free to reach out.
+We welcome contributions to the Instagram Scam Scanner Chrome Extension! If you encounter any issues, have suggestions for improvements, or would like to contribute to the development, feel free to reach out via email: [mailto:stefan@erben.eu](stefan@erben.eu)
 
 ## License
 
