@@ -1,6 +1,6 @@
-# ScamSpot
+# Instagram Spam Remover
 
-SpamSpot is a powerful tool designed to enhance your online safety and protect you from spam and scam comments on Instagram, particularly in the finance-related English content.
+Instagram Spam Remover is a powerful tool designed to enhance your online safety and protect you from spam and scam comments on Instagram, particularly in the finance-related English content.
 
 
 ## Related repositories
