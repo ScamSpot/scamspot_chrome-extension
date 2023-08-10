@@ -1,6 +1,6 @@
-# Instagram Spam Remover
+#Scam Spot Browser Extension
 
-Instagram Spam Remover is a powerful tool designed to enhance your online safety and protect you from spam and scam comments on Instagram, particularly in the finance-related English content.
+ScamSpot is a powerful tool designed to enhance your online safety and protect you from spam and scam comments on Instagram, particularly finance-related scams and spam.
 
 ## Related repositories
 - [https://github.com/ScamSpot/scamspot_ml-models/](https://github.com/ScamSpot/scamspot_ml-models/)
