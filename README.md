@@ -1,4 +1,4 @@
-# Scam Spot Browser Extension
+# ScamSpot Browser Extension
 
 ScamSpot is a powerful tool designed to enhance your online safety and protect you from spam and scam comments on Instagram, particularly finance-related scams and spam.
 
@@ -18,7 +18,7 @@ To install the Instagram Scam Scanner Chrome Extension, please follow these step
 
 ### Step 1: Download the Chrome extension ZIP file:
 
-1. Download the ZIP file: [Instagram Scam Scanner ZIP File](https://drive.google.com/file/d/1d6cueupDLeb0zFvO-gaRrZ3f2MKdBnVF/view?usp=share_link)
+1. Download the ZIP file: [Instagram Scam Scanner ZIP File](https://github.com/ScamSpot/scamspot_chrome-extension/blob/main/spamspot_chrome-extension_v1.2.zip)
 2. Extract the downloaded ZIP file to your desired location on your computer.
 
 ### Step 2: Install the Chrome extension:
