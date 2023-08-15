@@ -1,4 +1,4 @@
-#Scam Spot Browser Extension
+# Scam Spot Browser Extension
 
 ScamSpot is a powerful tool designed to enhance your online safety and protect you from spam and scam comments on Instagram, particularly finance-related scams and spam.
 
