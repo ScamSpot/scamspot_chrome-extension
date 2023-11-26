@@ -84,7 +84,7 @@ async function evaluateComment(comment_container, replyButton, device) {
 
     // make request with data
     const request = new XMLHttpRequest();
-    request.open('POST', 'https://spamspot-api-qkthc.ondigitalocean.app/scam/', true);
+    request.open('POST', 'https://scamspot-api-lpkr2.ondigitalocean.app/scam/', true);
     request.setRequestHeader('Content-Type', 'application/json');
     try {
       request.onload = function () {
